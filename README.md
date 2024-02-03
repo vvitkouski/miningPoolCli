@@ -5,12 +5,12 @@
 
 Open-source mining pool client
 
-To use with tonuniverse mining pool, follow the instructions at https://tonuniverse.com
+To use with ton.ninja mining pool, follow the instructions at https://ton.ninja
 
 ## Source code
 
 You can always get the source code from the github repository page:
-https://github.com/tonuniverse/miningPoolCli/
+https://github.com/truecarry/miningPoolCli/
 
 ## Build
 
@@ -26,14 +26,14 @@ https://github.com/tontechio/pow-miner-gpu/
 
 Run `./miningPoolCli` with flags:
 
-`-pool-id` string
+`-pool-id` wallet address
 
-	Example: -pool-id=904f935185ef96c1ab4daf11e5d84b22
+	Example: -pool-id=UQDu6s_r9_wmgWm5QgZuIeLep2fiSg4ijxGcJ0Sw8g4_9lvI
 	A unique identifier of a pool participant.
 
 `-url` string
   
-	Mining pool API url. (default "https://pool.tonuniverse.com")
+	Mining pool API url. (default "https://api.ton.ninja)
 
 `-stats` bool
   

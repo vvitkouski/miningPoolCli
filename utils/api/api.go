@@ -61,7 +61,7 @@ func Auth() {
 			mlog.LogInfo("Your TON wallet:")
 			mlog.LogInfo(serverResp.User.Address)
 		} else {
-			mlog.LogInfo("You can set your TON wallet in https://t.me/tonuniversebot")
+			mlog.LogInfo("You can set your TON wallet in https://ton.ninja")
 		}
 
 		config.StaticBeforeMinerSettings.PoolAddress = serverResp.PoolAddress

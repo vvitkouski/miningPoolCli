@@ -40,8 +40,8 @@ export GOARCH=amd64
 
 echo "envs set: GOOS=${GOOS} GOARCH=${GOARCH}"
 
-PARSE_VER=`awk '/BuildVersion/{print $NF}' config/version.go`
-BUILD_VERSION=${PARSE_VER:1:-1}
+PARSE_VER=$(awk '/BuildVersion/{print $NF}' config/version.go)
+BUILD_VERSION=$(echo $PARSE_VER | sed 's/^"\(.*\)"$/\1/')
 
 FOLDER="${CLI_NAME}-${BUILD_VERSION}"
 
