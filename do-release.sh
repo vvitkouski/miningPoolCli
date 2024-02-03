@@ -68,15 +68,15 @@ case $PLATFORM in
     cp $CLI_NAME $FOLDER 
     cp hiveos_configs/* $FOLDER
     sed -i -e "s/CUSTOM_VERSION=/CUSTOM_VERSION=${BUILD_VERSION}/g" $FOLDER/h-manifest.conf
-    tar -zcvf "${CLI_NAME}-${BUILD_VERSION}-linux.tar.gz" $FOLDER
+    tar -zcvf "${CLI_NAME}-${BUILD_VERSION}-${GOARCH}-linux.tar.gz" $FOLDER
     ;;
   windows) 
     cp "${CLI_NAME}.exe" $FOLDER 
-    zip -r "${CLI_NAME}-${BUILD_VERSION}-windows.zip" $FOLDER
+    zip -r "${CLI_NAME}-${BUILD_VERSION}-${GOARCH}-windows.zip" $FOLDER
     ;;
   darwin)
     cp $CLI_NAME $FOLDER
-    tar -zcvf "${CLI_NAME}-${BUILD_VERSION}-darwin.tar.gz" $FOLDER
+    tar -zcvf "${CLI_NAME}-${BUILD_VERSION}-${GOARCH}-darwin.tar.gz" $FOLDER
     ;;
 esac
 
