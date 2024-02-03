@@ -59,8 +59,18 @@ func InitProgram() []gpuwrk.GPUstruct {
 	mlog.LogText(config.Texts.Logo)
 	mlog.LogText(config.Texts.WelcomeAdditionalMsg)
 
-	if (config.OS.OperatingSystem == config.OSType.Win ||
-		config.OS.OperatingSystem == config.OSType.Linux) && config.OS.Architecture == "amd64" {
+	supportedOS := false
+	if config.OS.OperatingSystem == config.OSType.Win && config.OS.Architecture == "amd64" {
+		supportedOS = true
+	}
+	if config.OS.OperatingSystem == config.OSType.Linux && config.OS.Architecture == "amd64" {
+		supportedOS = true
+	}
+	if config.OS.OperatingSystem == config.OSType.Macos && config.OS.Architecture == "arm64" {
+		supportedOS = true
+	}
+
+	if supportedOS {
 		mlog.LogOk("Supported OS detected: " + config.OS.OperatingSystem + "/" + config.OS.Architecture)
 	} else {
 		mlog.LogFatal("Unsupported OS detected: " + config.OS.OperatingSystem + "/" + config.OS.Architecture)
@@ -75,6 +85,9 @@ func InitProgram() []gpuwrk.GPUstruct {
 	case config.OSType.Win:
 		config.MinerGetter.CurrExecName = config.MinerGetter.WinSettings.ExecutableName
 		config.MinerGetter.ExecNamePref = ""
+	case config.OSType.Macos:
+		config.MinerGetter.CurrExecName = config.MinerGetter.MacSettings.ExecutableName
+		config.MinerGetter.ExecNamePref = "./"
 	}
 
 	config.MinerGetter.StartPath = filepath.Join(
