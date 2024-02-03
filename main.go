@@ -33,7 +33,7 @@ func startTask(i int, task api.Task) {
 		"-p" + strconv.Itoa(gpuGoroutines[i].GpuData.PlatformId),
 		"-F" + strconv.Itoa(config.StaticBeforeMinerSettings.BoostFactor),
 		"-t" + strconv.Itoa(config.StaticBeforeMinerSettings.TimeoutT),
-		"-e" + strconv.FormatInt(task.Expire, 10),
+		// "-e" + strconv.FormatInt(task.Expire, 10),
 		config.StaticBeforeMinerSettings.PoolAddress,
 		helpers.ConvertHexData(task.Seed),
 		helpers.ConvertHexData(task.Complexity),
@@ -90,6 +90,12 @@ func startTask(i int, task api.Task) {
 	go func() {
 		for !done {
 			if checkTaskAlreadyFound(task.Id) {
+				killedByNotActual = true
+				if err := cmd.Process.Kill(); err != nil {
+					mlog.LogError(err.Error())
+				}
+				break
+			} else if task.Expire < time.Now().Unix() {
 				killedByNotActual = true
 				if err := cmd.Process.Kill(); err != nil {
 					mlog.LogError(err.Error())
