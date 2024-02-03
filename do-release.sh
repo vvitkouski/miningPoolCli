@@ -21,22 +21,31 @@
 
 help(){
     echo "Usage: 
-    ./do-release.sh {linux|windows}"
+    ./do-release.sh {linux|windows|darwin} {amd64|arm64}"
     exit 2
 }
 
 CLI_NAME="miningPoolCli"
 PLATFORM=$1
+ARCH=$2
 
 if [ $PLATFORM = "windows" ]; then
     export GOOS=windows
 elif [ $PLATFORM = "linux" ]; then
     export GOOS=linux
+elif [ $PLATFORM = "darwin" ]; then
+    export GOOS=darwin
 else 
     echo "Invalid platform"; help
 fi
 
-export GOARCH=amd64
+if [ $ARCH = "amd64" ]; then
+    export GOARCH=amd64
+elif [ $ARCH = "arm64" ]; then
+    export GOARCH=arm64
+else
+    export GOARCH=amd64
+fi
 
 echo "envs set: GOOS=${GOOS} GOARCH=${GOARCH}"
 
@@ -64,6 +73,10 @@ case $PLATFORM in
   windows) 
     cp "${CLI_NAME}.exe" $FOLDER 
     zip -r "${CLI_NAME}-${BUILD_VERSION}-windows.zip" $FOLDER
+    ;;
+  darwin)
+    cp $CLI_NAME $FOLDER
+    tar -zcvf "${CLI_NAME}-${BUILD_VERSION}-darwin.tar.gz" $FOLDER
     ;;
 esac
 

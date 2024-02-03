@@ -61,7 +61,7 @@ This script will automatically compile the source code for the required OS, set 
 
 Usage: 
 
-	./do-release.sh {linux|windows}
+	./do-release.sh {linux|windows|darwin} {amd64|arm64}
 
 ## LICENSE
 
