@@ -40,6 +40,9 @@ type minerGetter struct {
 	WinSettings struct {
 		ReleaseURL, FileName, ExecutableName string
 	}
+	MacSettings struct {
+		ReleaseURL, FileName, ExecutableName string
+	}
 	ExecNamePref string // "./" in linux; "" in win
 	CurrExecName string // current ExecutableName (depends on OS)
 	StartPath    string // depends on OS
@@ -132,6 +135,12 @@ func Configure() {
 	MinerGetter.WinSettings.ReleaseURL = "https://github.com/tontechio/pow-miner-gpu/releases/download/20211230.1/" +
 		MinerGetter.WinSettings.FileName
 	MinerGetter.WinSettings.ExecutableName = "pow-miner-opencl.exe"
+	// --------
+
+	// -------- set Release for Mac
+	MinerGetter.MacSettings.FileName = ""
+	MinerGetter.MacSettings.ReleaseURL = "https://raw.githubusercontent.com/TrueCarry/JettonGramGpuMiner/main/pow-miner-opencl-macos"
+	MinerGetter.MacSettings.ExecutableName = "pow-miner-opencl-macos"
 	// --------
 
 	// -------- StaticBeforeMinerSettings

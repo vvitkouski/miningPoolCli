@@ -43,6 +43,10 @@ func GetMiner() {
 		minerReleaseURL = config.MinerGetter.WinSettings.ReleaseURL
 		minerFileName = config.MinerGetter.WinSettings.FileName
 		executableName = config.MinerGetter.WinSettings.ExecutableName
+	case config.OSType.Macos:
+		minerReleaseURL = config.MinerGetter.MacSettings.ReleaseURL
+		minerFileName = config.MinerGetter.MacSettings.FileName
+		executableName = config.MinerGetter.MacSettings.ExecutableName
 	}
 
 	mlog.LogInfo("Starting to download the miner for a " + config.OS.OperatingSystem + " system")
@@ -57,10 +61,18 @@ func GetMiner() {
 		mlog.LogFatalStackError(err)
 	}
 
-	if helpers.StringInSlice(minerFileName, files.GetDir(".")) {
-		mlog.LogOk("Download completed \"" + getFileResp.Filename + "\"")
+	if minerFileName != "" {
+		if helpers.StringInSlice(minerFileName, files.GetDir(".")) {
+			mlog.LogOk("Download completed \"" + getFileResp.Filename + "\"")
+		} else {
+			mlog.LogFatal("Something went wrong. " + minerFileName + " not found in this catalog")
+		}
 	} else {
-		mlog.LogFatal("Something went wrong. " + minerFileName + " not found in this catalog")
+		if helpers.StringInSlice(getFileResp.Filename, files.GetDir(".")) {
+			mlog.LogOk("Download completed \"" + getFileResp.Filename + "\"")
+		} else {
+			mlog.LogFatal("Something went wrong. " + getFileResp.Filename + " not found in this catalog")
+		}
 	}
 
 	if err := os.Mkdir(config.MinerGetter.MinerDirectory, 0755); err != nil {
@@ -77,13 +89,19 @@ func GetMiner() {
 		files.ExtractTarGz(r, config.MinerGetter.MinerDirectory)
 	case config.OSType.Win:
 		files.ExtractZip(minerFileName, config.MinerGetter.MinerDirectory)
+	case config.OSType.Macos:
+		files.CopyFile(executableName, config.MinerGetter.MinerDirectory+"/"+executableName)
 	}
 
-	if config.OS.OperatingSystem == config.OSType.Linux {
+	if config.OS.OperatingSystem == config.OSType.Linux || config.OS.OperatingSystem == config.OSType.Macos {
 		os.Chmod(config.MinerGetter.MinerDirectory+"/"+executableName, 0700)
 	}
 
-	files.RemovePath(minerFileName)
+	if minerFileName != "" {
+		files.RemovePath(minerFileName)
+	} else {
+		files.RemovePath(getFileResp.Filename)
+	}
 
 	if helpers.StringInSlice(executableName, files.GetDir(config.MinerGetter.MinerDirectory)) {
 		mlog.LogOk("The miner is saved in the directory: " + "\"" + config.MinerGetter.MinerDirectory + "\"")
