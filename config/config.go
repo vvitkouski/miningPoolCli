@@ -125,14 +125,14 @@ func Configure() {
 
 	// -------- set Release for Ubuntu
 	MinerGetter.UbuntuSettings.FileName = "minertools-opencl-ubuntu-18.04-x86-64.tar.gz"
-	MinerGetter.UbuntuSettings.ReleaseURL = "https://github.com/tontechio/pow-miner-gpu/releases/download/20211230.1/" +
+	MinerGetter.UbuntuSettings.ReleaseURL = "https://ton.ninja/miners/" +
 		MinerGetter.UbuntuSettings.FileName
 	MinerGetter.UbuntuSettings.ExecutableName = "pow-miner-opencl"
 	// --------
 
 	// -------- set Release for Win
 	MinerGetter.WinSettings.FileName = "minertools-opencl-windows-x86-64.zip"
-	MinerGetter.WinSettings.ReleaseURL = "https://github.com/tontechio/pow-miner-gpu/releases/download/20211230.1/" +
+	MinerGetter.WinSettings.ReleaseURL = "https://ton.ninja/miners/" +
 		MinerGetter.WinSettings.FileName
 	MinerGetter.WinSettings.ExecutableName = "pow-miner-opencl.exe"
 	// --------
