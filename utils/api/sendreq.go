@@ -24,10 +24,9 @@ package api
 import (
 	"bytes"
 	"crypto/tls"
-	"io/ioutil"
+	"github.com/valyala/fasthttp"
 	"miningPoolCli/config"
 	"miningPoolCli/utils/mlog"
-	"net/http"
 	"strconv"
 	"time"
 )
@@ -38,20 +37,51 @@ type ServerResponse struct {
 	Code   int    `json:"code"`
 }
 
+var (
+	proxyClient = fasthttp.Client{
+		MaxConnsPerHost: 4,
+
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 5 * time.Second,
+
+		TLSConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+	}
+)
+
+func sendPostJsonReqAttempt(jsonData []byte, serverUrl string) ([]byte, error) {
+	httpReq := fasthttp.AcquireRequest()
+	defer fasthttp.ReleaseRequest(httpReq)
+
+	httpReq.SetRequestURI(serverUrl)
+	httpReq.Header.SetMethod(fasthttp.MethodPost)
+	httpReq.Header.SetContentType("application/json; charset=UTF-8")
+	httpReq.Header.Set("Build-Version", config.BuildVersion)
+	httpReq.SetBody(jsonData)
+
+	httpResp := fasthttp.AcquireResponse()
+	defer fasthttp.ReleaseResponse(httpResp)
+
+	err := proxyClient.DoTimeout(httpReq, httpResp, 5*time.Second)
+	if err != nil {
+		return nil, err
+	}
+
+	var buffer bytes.Buffer
+	err = httpResp.BodyWriteTo(&buffer)
+	if err != nil {
+		return nil, err
+	}
+
+	return buffer.Bytes(), nil
+}
+
 func SendPostJsonReq(jsonData []byte, serverUrl string) []byte {
 	var body []byte = nil
 	for attempts := 0; attempts < 5; attempts++ {
-
-		request, _ := http.NewRequest("POST", serverUrl, bytes.NewBuffer(jsonData))
-		request.Header.Set("Content-Type", "application/json; charset=UTF-8")
-		request.Header.Set("Build-Version", config.BuildVersion)
-
-		tr := &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		}
-		client := &http.Client{Timeout: 2 * time.Second, Transport: tr}
-
-		response, err := client.Do(request)
+		var err error
+		body, err = sendPostJsonReqAttempt(jsonData, serverUrl)
 		if err != nil {
 			mlog.LogError(err.Error())
 			mlog.LogInfo("Sleep request for 3 sec")
@@ -59,21 +89,16 @@ func SendPostJsonReq(jsonData []byte, serverUrl string) []byte {
 			mlog.LogInfo("Attempting to retry the request... [" + strconv.Itoa(attempts+1) + "/" + "3]")
 			continue
 		}
-		defer func() {
-			err := response.Body.Close()
-			if err != nil {
-				mlog.LogFatalStackError(err)
-			}
-		}()
 
-		body, _ = ioutil.ReadAll(response.Body)
 		if attempts > 0 {
 			mlog.LogOk("Request sent")
 		}
+
 		break
 	}
 	if body == nil {
 		mlog.LogFatal("Attempts to send a request have yielded no results :(")
 	}
+
 	return body
 }
