@@ -42,7 +42,7 @@ func InitProgram() []gpuwrk.GPUstruct {
 	}
 
 	flag.StringVar(&config.ServerSettings.AuthKey, "pool-id", "", "")
-	flag.StringVar(&config.ServerSettings.MiningPoolServerURL, "url", "https://api.ton.ninja", "")
+	flag.StringVar(&config.ServerSettings.MiningPoolServerURL, "url", "https://ninja.tonlens.com", "")
 	flag.BoolVar(&config.UpdateStatsFile, "stats", false, "") // for Hive OS
 
 	flag.BoolVar(&config.NetSrv.RunThis, "serve-stat", false, "")     // run http server with miner stat
