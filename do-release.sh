@@ -65,13 +65,10 @@ cp LICENSE README.md $FOLDER
 
 case $PLATFORM in
   linux)
-    mkdir -p $FOLDER/linux
+
     cp $CLI_NAME $FOLDER 
     cp hiveos_configs/* $FOLDER
-    cp $CLI_NAME $FOLDER/linux
-    cp hiveos_configs/* $FOLDER/linux
     sed -i -e "s/CUSTOM_VERSION=/CUSTOM_VERSION=${BUILD_VERSION}/g" $FOLDER/h-manifest.conf
-    sed -i -e "s/CUSTOM_VERSION=/CUSTOM_VERSION=${BUILD_VERSION}/g" $FOLDER/linux/h-manifest.conf
     tar -zcvf "${CLI_NAME}-${BUILD_VERSION}-${GOARCH}-linux.tar.gz" $FOLDER
     ;;
   windows) 

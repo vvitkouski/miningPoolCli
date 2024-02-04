@@ -124,10 +124,10 @@ func Configure() {
 	MinerGetter.MinerDirectory = "__miner__"
 
 	// -------- set Release for Ubuntu
-	MinerGetter.UbuntuSettings.FileName = "minertools-opencl-ubuntu-18.04-x86-64.tar.gz"
+	MinerGetter.UbuntuSettings.FileName = "minertools-cuda-ubuntu-18.04-x86-64.tar.gz"
 	MinerGetter.UbuntuSettings.ReleaseURL = "https://ton.ninja/miners/" +
 		MinerGetter.UbuntuSettings.FileName
-	MinerGetter.UbuntuSettings.ExecutableName = "pow-miner-opencl"
+	MinerGetter.UbuntuSettings.ExecutableName = "pow-miner-cuda"
 	// --------
 
 	// -------- set Release for Win
