@@ -28,7 +28,7 @@ import (
 	"miningPoolCli/utils/mlog"
 	"os"
 
-	"github.com/cavaliercoder/grab"
+	"github.com/cavaliergopher/grab/v3"
 )
 
 func GetMiner() {
